@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Fociskártya Shop</title>
+<style>
+body{margin:0;font-family:Arial;background:#111;color:white;}
+.sidebar{position:fixed;left:0;top:0;width:200px;height:100%;background:#1a1a1a;padding-top:20px;}
+.sidebar a{display:block;padding:15px;color:white;text-decoration:none;cursor:pointer;}
+.sidebar a:hover{background:#333;}
+.content{margin-left:200px;padding:20px;}
+.product{background:#222;padding:15px;margin:10px;border-radius:8px;width:200px;display:inline-block;text-align:center;}
+button{background:#22c55e;border:none;padding:8px;border-radius:6px;color:white;cursor:pointer;margin-top:10px;}
+button:hover{background:#16a34a;}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+<a onclick="page('home')">Főoldal</a>
+<a onclick="page('types')">Típusok</a>
+<a onclick="page('contact')">Kapcsolat</a>
+<div style="margin-top:30px;">Kosár: <span id="cart">0</span></div>
+</div>
+
+<div class="content" id="content">
+<h1>Főoldal</h1>
+<div id="products"></div>
+</div>
+
+<script>
+// ----------------- TERMÉKEK -----------------
+let data = [
+  {name:"Messi kártya", price:3000, stock:5},
+  {name:"Ronaldo kártya", price:2800, stock:3},
+  {name:"Mbappe kártya", price:2500, stock:10}
+];
+let cart = 0;
+
+// ----------------- FUNKCIÓK -----------------
+function displayProducts(){
+  let html = "";
+  data.forEach((p,i)=>{
+    html += `
+      <div class="product">
+        <h3>${p.name}</h3>
+        Ár: ${p.price} Ft<br>
+        Raktár: <span id="stock-${i}">${p.stock}</span><br>
+        <button onclick="addToCart(${i})" ${p.stock==0?'disabled':''}>Kosárba</button>
+      </div>
+    `;
+  });
+  document.getElementById("products").innerHTML = html;
+}
+
+function addToCart(i){
+  if(data[i].stock>0){
+    cart++;
+    data[i].stock--;
+    document.getElementById("cart").innerText = cart;
+    document.getElementById("stock-"+i).innerText = data[i].stock;
+    if(data[i].stock==0){
+      document.querySelectorAll("button")[i].disabled = true;
+    }
+  }
+}
+
+function page(p){
+  if(p=="home"){
+    document.getElementById("content").innerHTML="<h1>Főoldal</h1><div id='products'></div>";
+    displayProducts();
+  }
+  if(p=="types"){
+    document.getElementById("content").innerHTML="<h1>Típusok</h1><div id='products'></div>";
+    displayProducts();
+  }
+  if(p=="contact"){
+    document.getElementById("content").innerHTML="<h1>Kapcsolat</h1><p>Itt írhatod a kapcsolat szöveget.</p>";
+  }
+}
+
+// ----------------- INIT -----------------
+displayProducts();
+</script>
+
+</body>
+</html>
